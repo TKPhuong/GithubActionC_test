@@ -1,0 +1,33 @@
+name: Ceedling Tests
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Ceedling
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 3.0.5
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install build-essential -y
+        gem install ceedling
+
+    - name: Run Ceedling tests
+      run: ceedling test:all
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: ceedling-results
+        path: build/test/results
