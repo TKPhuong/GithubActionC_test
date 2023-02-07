@@ -1,33 +1,45 @@
+# ワークフローの名前
 name: Ceedling Tests
 
+# トリガー: コードがGithubリポジトリにプッシュされたとき
 on:
   push:
     branches: [main]
 
+# ジョブ: このワークフローで実行されるタスクのセット
 jobs:
   build:
+    # 実行環境: Ubuntu最新版
     runs-on: ubuntu-latest
 
     steps:
+    # コードのチェックアウト: Githubリポジトリからコードを取得
     - name: Checkout code
       uses: actions/checkout@v2
 
+    # Ceedlingのセットアップ: Ruby 3.0.5をインストール
     - name: Setup Ceedling
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.0.5'
 
+    # 依存関係のインストール: 必要なパッケージとCeedling gemをインストール
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install build-essential -y
         gem install ceedling
 
+    # Ceedlingテストの実行: ceedling test:all コマンドでテストを実行
     - name: Run Ceedling tests
       run: ceedling test:all
 
+    # テスト結果のアップロード: build/test/results ディレクトリ内のテスト結果をアップロード
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
         name: ceedling-results
         path: build/test/results
+
+
+    
